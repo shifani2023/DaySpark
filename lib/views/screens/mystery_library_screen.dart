@@ -1,733 +1,490 @@
+
 import 'package:flutter/material.dart';
-import '../../utils/app_theme.dart';
 
-class MysteryLibraryScreen extends StatefulWidget {
+class MysteryLibraryScreen extends StatelessWidget {
   const MysteryLibraryScreen({super.key});
-
-  @override
-  State<MysteryLibraryScreen> createState() => _MysteryLibraryScreenState();
-}
-
-class _MysteryLibraryScreenState extends State<MysteryLibraryScreen> {
-  final TextEditingController searchController = TextEditingController();
-
-  String selectedCategory = 'All';
-
-  final List<String> categories = [
-    'All',
-    'Easy',
-    'Medium',
-    'Hard',
-  ];
-
-  final List<MysteryItem> mysteries = [
-    MysteryItem(
-      title: 'The Missing Necklace',
-      description:
-          'A valuable necklace disappeared during a family dinner. '
-          'Investigate the guests and discover who took it.',
-      difficulty: 'Easy',
-      duration: '10 min',
-      icon: Icons.diamond_rounded,
-      color: const Color(0xFFFFE7B8),
-      iconColor: const Color(0xFFB87913),
-      clues: 5,
-      isLocked: false,
-    ),
-
-    MysteryItem(
-      title: 'The Locked Room',
-      description:
-          'A mysterious incident happened inside a locked room. '
-          'Nothing is as simple as it seems.',
-      difficulty: 'Medium',
-      duration: '15 min',
-      icon: Icons.lock_outline_rounded,
-      color: const Color(0xFFE5E0FF),
-      iconColor: AppTheme.primary,
-      clues: 7,
-      isLocked: false,
-    ),
-
-    MysteryItem(
-      title: 'The Secret of Room 13',
-      description:
-          'A strange hotel room holds a secret. Follow the clues '
-          'carefully to uncover the truth.',
-      difficulty: 'Hard',
-      duration: '20 min',
-      icon: Icons.hotel_rounded,
-      color: const Color(0xFFDDF5EC),
-      iconColor: AppTheme.teal,
-      clues: 8,
-      isLocked: false,
-    ),
-
-    MysteryItem(
-      title: 'The Vanishing Painting',
-      description:
-          'A famous painting disappeared from an art gallery. '
-          'Can you identify the thief?',
-      difficulty: 'Medium',
-      duration: '15 min',
-      icon: Icons.image_search_rounded,
-      color: const Color(0xFFFFE2E8),
-      iconColor: const Color(0xFFE45A80),
-      clues: 6,
-      isLocked: true,
-    ),
-  ];
-
-  List<MysteryItem> get filteredMysteries {
-    return mysteries.where((mystery) {
-      final matchesSearch = mystery.title
-              .toLowerCase()
-              .contains(searchController.text.toLowerCase()) ||
-          mystery.description
-              .toLowerCase()
-              .contains(searchController.text.toLowerCase());
-
-      final matchesCategory = selectedCategory == 'All' ||
-          mystery.difficulty == selectedCategory;
-
-      return matchesSearch && matchesCategory;
-    }).toList();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
-
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              // HEADER
-              const Text(
-                'Discover Mysteries 🔍',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.darkText,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              const Text(
-                'Choose a case and put your detective skills to the test.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppTheme.secondaryText,
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // SEARCH BAR
-              TextField(
-                controller: searchController,
-
-                onChanged: (value) {
-                  setState(() {});
-                },
-
-                decoration: InputDecoration(
-                  hintText: 'Search mysteries...',
-                  prefixIcon: const Icon(
-                    Icons.search_rounded,
-                    color: AppTheme.primary,
-                  ),
-
-                  suffixIcon: searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            searchController.clear();
-                            setState(() {});
-                          },
-                        )
-                      : null,
-
-                  filled: true,
-                  fillColor: Colors.white,
-
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none,
-                  ),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFEDE9FF),
-                    ),
-                  ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: const BorderSide(
-                      color: AppTheme.primary,
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // FILTERS
-              SizedBox(
-                height: 42,
-
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-
-                    final isSelected =
-                        selectedCategory == category;
-
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 10),
-
-                      child: ChoiceChip(
-                        label: Text(category),
-
-                        selected: isSelected,
-
-                        onSelected: (selected) {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                        },
-
-                        selectedColor: AppTheme.primary,
-
-                        backgroundColor: Colors.white,
-
-                        labelStyle: TextStyle(
-                          color: isSelected
-                              ? Colors.white
-                              : AppTheme.secondaryText,
-
-                          fontWeight: FontWeight.w600,
-                        ),
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-
-                        side: BorderSide(
-                          color: isSelected
-                              ? AppTheme.primary
-                              : const Color(0xFFEDE9FF),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // LIBRARY HEADER
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                children: [
-                  const Text(
-                    'Mystery Library',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.darkText,
-                    ),
-                  ),
-
-                  Text(
-                    '${filteredMysteries.length} cases',
-                    style: const TextStyle(
-                      color: AppTheme.secondaryText,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 15),
-
-              // MYSTERY LIST
-              if (filteredMysteries.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40),
-
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.search_off_rounded,
-                          size: 55,
-                          color: AppTheme.secondaryText,
-                        ),
-
-                        SizedBox(height: 12),
-
-                        Text(
-                          'No mysteries found',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.darkText,
-                          ),
-                        ),
-
-                        SizedBox(height: 5),
-
-                        Text(
-                          'Try another search or category.',
-                          style: TextStyle(
-                            color: AppTheme.secondaryText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-              ...filteredMysteries.map(
-                (mystery) => MysteryLibraryCard(
-                  mystery: mystery,
-                  onTap: () {
-                    showMysteryDetails(context, mystery);
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // FOOTER
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE9E4FF),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.lightbulb_outline_rounded,
-                      color: AppTheme.primary,
-                      size: 28,
-                    ),
-
-                    SizedBox(width: 12),
-
-                    Expanded(
-                      child: Text(
-                        'Tip: Pay attention to every detail. '
-                        'Some clues may be hidden in ordinary things!',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppTheme.darkText,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      appBar: AppBar(
+        title: const Text('Mystery Library'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          const Text(
+            'Choose a mystery to solve',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+          const SizedBox(height: 8),
+          const Text(
+            'Investigate clues, solve the mystery, and discover the truth.',
+          ),
+          const SizedBox(height: 20),
+
+          _MysteryCard(
+            title: 'The Missing Necklace',
+            description:
+                'A valuable necklace disappeared during a family dinner.',
+            difficulty: 'Easy',
+            icon: Icons.search,
+            color: const Color(0xFF6C55D8),
+          ),
+
+          const SizedBox(height: 12),
+
+          _MysteryCard(
+            title: 'The Locked Room',
+            description:
+                'A mysterious incident occurred in a locked room.',
+            difficulty: 'Medium',
+            icon: Icons.lock_outline,
+            color: const Color(0xFF287F9E),
+            comingSoon: true,
+          ),
+
+          const SizedBox(height: 12),
+
+          _MysteryCard(
+            title: 'The Secret of Room 13',
+            description:
+                'Discover the secrets hidden behind Room 13.',
+            difficulty: 'Hard',
+            icon: Icons.key,
+            color: const Color(0xFF9B4D85),
+            comingSoon: true,
+          ),
+        ],
       ),
     );
   }
 }
 
-// ============================================================
-// MYSTERY DATA MODEL
-// ============================================================
-
-class MysteryItem {
+class _MysteryCard extends StatelessWidget {
   final String title;
   final String description;
   final String difficulty;
-  final String duration;
   final IconData icon;
   final Color color;
-  final Color iconColor;
-  final int clues;
-  final bool isLocked;
+  final bool comingSoon;
 
-  MysteryItem({
+  const _MysteryCard({
     required this.title,
     required this.description,
     required this.difficulty,
-    required this.duration,
     required this.icon,
     required this.color,
-    required this.iconColor,
-    required this.clues,
-    required this.isLocked,
-  });
-}
-
-// ============================================================
-// MYSTERY CARD
-// ============================================================
-
-class MysteryLibraryCard extends StatelessWidget {
-  final MysteryItem mystery;
-  final VoidCallback onTap;
-
-  const MysteryLibraryCard({
-    super.key,
-    required this.mystery,
-    required this.onTap,
+    this.comingSoon = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-      ),
-
-      child: InkWell(
-        onTap: onTap,
-
-        borderRadius: BorderRadius.circular(22),
-
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-
-          child: Row(
-            children: [
-
-              // MYSTERY ICON
-              Container(
-                width: 70,
-                height: 85,
-
-                decoration: BoxDecoration(
-                  color: mystery.color,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-
-                child: Icon(
-                  mystery.isLocked
-                      ? Icons.lock_rounded
-                      : mystery.icon,
-
-                  color: mystery.iconColor,
-                  size: 35,
-                ),
-              ),
-
-              const SizedBox(width: 15),
-
-              // DETAILS
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  children: [
-
-                    Text(
-                      mystery.title,
-
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.darkText,
-                      ),
-                    ),
-
-                    const SizedBox(height: 6),
-
-                    Text(
-                      mystery.description,
-
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppTheme.secondaryText,
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    Wrap(
-                      spacing: 12,
-
-                      children: [
-                        MysteryInfo(
-                          icon: Icons.timer_outlined,
-                          text: mystery.duration,
-                        ),
-
-                        MysteryInfo(
-                          icon: Icons.search_rounded,
-                          text: '${mystery.clues} clues',
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    DifficultyBadge(
-                      difficulty: mystery.difficulty,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 5),
-
-              Icon(
-                mystery.isLocked
-                    ? Icons.lock_outline_rounded
-                    : Icons.arrow_forward_ios_rounded,
-
-                size: 17,
-                color: AppTheme.secondaryText,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// MYSTERY INFORMATION
-// ============================================================
-
-class MysteryInfo extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const MysteryInfo({
-    super.key,
-    required this.icon,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-
-      children: [
-        Icon(
-          icon,
-          size: 14,
-          color: AppTheme.secondaryText,
-        ),
-
-        const SizedBox(width: 4),
-
-        Text(
-          text,
-          style: const TextStyle(
-            fontSize: 11,
-            color: AppTheme.secondaryText,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ============================================================
-// DIFFICULTY BADGE
-// ============================================================
-
-class DifficultyBadge extends StatelessWidget {
-  final String difficulty;
-
-  const DifficultyBadge({
-    super.key,
-    required this.difficulty,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Color backgroundColor;
-    Color textColor;
-
-    switch (difficulty) {
-      case 'Easy':
-        backgroundColor = const Color(0xFFDDF5EC);
-        textColor = const Color(0xFF18876B);
-        break;
-
-      case 'Medium':
-        backgroundColor = const Color(0xFFFFE9D2);
-        textColor = const Color(0xFFB76A00);
-        break;
-
-      case 'Hard':
-        backgroundColor = const Color(0xFFFFE1E7);
-        textColor = const Color(0xFFD34770);
-        break;
-
-      default:
-        backgroundColor = Colors.grey.shade200;
-        textColor = Colors.grey.shade700;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 9,
-        vertical: 4,
-      ),
-
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-
-      child: Text(
-        difficulty,
-
-        style: TextStyle(
-          color: textColor,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// MYSTERY DETAILS DIALOG
-// ============================================================
-
-void showMysteryDetails(
-  BuildContext context,
-  MysteryItem mystery,
-) {
-  showDialog(
-    context: context,
-
-    builder: (context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-
-        title: Text(mystery.title),
-
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
-            Text(mystery.description),
-
-            const SizedBox(height: 20),
-
             Row(
               children: [
-                const Icon(
-                  Icons.timer_outlined,
-                  color: AppTheme.primary,
+                CircleAvatar(
+                  backgroundColor: color.withValues(alpha: 0.15),
+                  child: Icon(icon, color: color),
                 ),
-
-                const SizedBox(width: 8),
-
-                Text(mystery.duration),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
-
-            const SizedBox(height: 10),
-
+            const SizedBox(height: 12),
+            Text(description),
+            const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(
-                  Icons.search_rounded,
-                  color: AppTheme.primary,
-                ),
-
-                const SizedBox(width: 8),
-
-                Text('${mystery.clues} clues'),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            Row(
-              children: [
-                const Icon(
-                  Icons.signal_cellular_alt,
-                  color: AppTheme.primary,
-                ),
-
-                const SizedBox(width: 8),
-
-                Text('${mystery.difficulty} difficulty'),
+                Chip(label: Text(difficulty)),
+                const Spacer(),
+                if (comingSoon)
+                  const Text(
+                    'Coming soon',
+                    style: TextStyle(color: Colors.grey),
+                  )
+                else
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const InvestigationScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text('Play'),
+                  ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
 
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+class InvestigationScreen extends StatefulWidget {
+  const InvestigationScreen({super.key});
 
-            child: const Text('Close'),
-          ),
+  @override
+  State<InvestigationScreen> createState() =>
+      _InvestigationScreenState();
+}
 
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
+class _InvestigationScreenState extends State<InvestigationScreen> {
+  int cluesFound = 0;
+  bool hintShown = false;
+  bool accusationMade = false;
+  String? selectedSuspect;
+  String? resultMessage;
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    mystery.isLocked
-                        ? 'This mystery is currently locked.'
-                        : 'Investigation screen will be added next!',
+  final List<String> suspects = [
+    'Emma - The Daughter',
+    'Daniel - The Butler',
+    'Sophia - The Guest',
+  ];
+
+  final List<Map<String, String>> clues = [
+    {
+      'title': 'Clue 1: The Broken Glass',
+      'description': 'A glass was broken near the jewellery cabinet.',
+    },
+    {
+      'title': 'Clue 2: The Open Window',
+      'description':
+          'The window was open, but there were no footprints outside.',
+    },
+    {
+      'title': 'Clue 3: The Blue Thread',
+      'description': 'Blue fabric was found near the cabinet.',
+    },
+  ];
+
+  void revealClue() {
+    if (cluesFound < clues.length) {
+      setState(() {
+        cluesFound++;
+      });
+    }
+  }
+
+  void showHint() {
+    setState(() {
+      hintShown = true;
+    });
+  }
+
+  void makeAccusation() {
+    if (selectedSuspect == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a suspect first.'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      accusationMade = true;
+
+      if (selectedSuspect == 'Emma - The Daughter') {
+        resultMessage =
+            'Correct! Emma took the necklace. '
+            'The blue fabric matched her dress, and she used '
+            'the broken glass to create a distraction.';
+      } else {
+        resultMessage =
+            'Incorrect! That suspect was innocent. '
+            'Review the clues and try the investigation again.';
+      }
+    });
+  }
+
+  void resetInvestigation() {
+    setState(() {
+      cluesFound = 0;
+      hintShown = false;
+      accusationMade = false;
+      selectedSuspect = null;
+      resultMessage = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Investigation'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          // STORY
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF6C55D8),
+                  Color(0xFF44317E),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.search,
+                  color: Colors.white,
+                  size: 40,
+                ),
+                SizedBox(height: 12),
+                Text(
+                  'The Missing Necklace',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              );
-            },
-
-            child: Text(
-              mystery.isLocked
-                  ? 'Locked'
-                  : 'Start Mystery',
+                SizedBox(height: 10),
+                Text(
+                  'A valuable necklace disappeared during a family '
+                  'dinner. Three people were inside the house. '
+                  'Can you discover who took it?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
             ),
           ),
+
+          const SizedBox(height: 24),
+
+          // PROGRESS
+          Text(
+            'Investigation Progress',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          LinearProgressIndicator(
+            value: cluesFound / clues.length,
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(10),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text('$cluesFound of ${clues.length} clues discovered'),
+
+          const SizedBox(height: 24),
+
+          // CLUES
+          Text(
+            'Discover the Clues',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          ...List.generate(clues.length, (index) {
+            final clue = clues[index];
+            final discovered = index < cluesFound;
+
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: ListTile(
+                leading: Icon(
+                  discovered
+                      ? Icons.check_circle
+                      : Icons.lock_outline,
+                  color: discovered ? Colors.green : Colors.grey,
+                ),
+                title: Text(
+                  clue['title']!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  discovered
+                      ? clue['description']!
+                      : 'Clue not discovered yet',
+                ),
+              ),
+            );
+          }),
+
+          const SizedBox(height: 10),
+
+          // DISCOVER CLUE
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed:
+                  cluesFound < clues.length ? revealClue : null,
+              icon: const Icon(Icons.search),
+              label: Text(
+                cluesFound < clues.length
+                    ? 'Discover Next Clue'
+                    : 'All Clues Discovered',
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // HINT
+          Card(
+            color: Colors.amber.withValues(alpha: 0.15),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.lightbulb,
+                        color: Colors.orange,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Need a Hint?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  if (hintShown)
+                    const Text(
+                      'Look for the person whose clothing matches '
+                      'the blue fabric found near the jewellery cabinet.',
+                    ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: showHint,
+                    child: Text(
+                      hintShown ? 'Hint Revealed' : 'Reveal Hint',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // SUSPECTS
+          Text(
+            'Choose Your Suspect',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          ...suspects.map((suspect) {
+            return Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: RadioListTile<String>(
+                value: suspect,
+                groupValue: selectedSuspect,
+                title: Text(suspect),
+                onChanged: accusationMade
+                    ? null
+                    : (value) {
+                        setState(() {
+                          selectedSuspect = value;
+                        });
+                      },
+              ),
+            );
+          }),
+
+          const SizedBox(height: 12),
+
+          // ACCUSATION
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed:
+                  accusationMade ? null : makeAccusation,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6C55D8),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: const Text('Make My Accusation'),
+            ),
+          ),
+
+          // RESULT
+          if (resultMessage != null) ...[
+            const SizedBox(height: 20),
+            Card(
+              color: selectedSuspect == 'Emma - The Daughter'
+                  ? Colors.green.withValues(alpha: 0.15)
+                  : Colors.red.withValues(alpha: 0.15),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  resultMessage!,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: resetInvestigation,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Play Investigation Again'),
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 30),
         ],
-      );
-    },
-  );
+      ),
+    );
+  }
 }

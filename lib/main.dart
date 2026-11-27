@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'utils/app_theme.dart';
+import 'views/screens/mystery_library_screen.dart';
 
 void main() {
   runApp(const DaySparkApp());
@@ -837,13 +838,10 @@ class DiscoverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SimplePage(
-      icon: Icons.explore_rounded,
-      title: 'Discover',
-      description: 'Discover mysteries, stories and new experiences.',
-    );
+    return const MysteryLibraryScreen();
   }
 }
+
 
 class ActivitiesPage extends StatelessWidget {
   const ActivitiesPage({super.key});

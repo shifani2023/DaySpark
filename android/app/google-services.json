@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "317187147119",
+    "project_id": "dayspark-39ccf",
+    "storage_bucket": "dayspark-39ccf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317187147119:android:71ed7bae3f49562a28949a",
+        "android_client_info": {
+          "package_name": "com.example.dayspark"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyMYBwLZxR7HuujyH744XDzUz4bddHHl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
